@@ -60,9 +60,11 @@ requirements amplitude for code flow
 
 - [x] save data locally
 
-- [ ] extract files
-- [ ] move files
-- [ ] rename files
+- [x] seperate py file for unpacking data
+- [x] extract files
+- [x] move files
+- [x] rename files
+- [ ] link both python scripts so file names flow through
 - [ ] unnest or fix JSON files if required
 
 - [ ] end logging
