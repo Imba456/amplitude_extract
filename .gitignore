@@ -1,6 +1,7 @@
 #ignore data and logs folder
 data/
 logs/
+datajson/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
