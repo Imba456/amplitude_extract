@@ -67,7 +67,7 @@ requirements amplitude for code flow
 - [x] extract files
 - [x] move files
 - [x] rename files
-- [ ] link both python scripts so file names flow through
+- [x] link both python scripts so file names flow through
 - [ ] unnest or fix JSON files if required
 
 - [x] end logging
