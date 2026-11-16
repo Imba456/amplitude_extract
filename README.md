@@ -1,5 +1,6 @@
 # amplitude_extract
-amplitude api extract section part of a larger pipeline
+amplitude api extract section part of a larger pipeline.
+including load section 
 
 # Requirements
 requirements amplitude for code flow
@@ -67,7 +68,7 @@ requirements amplitude for code flow
 - [ ] link both python scripts so file names flow through
 - [ ] unnest or fix JSON files if required
 
-- [ ] end logging
+- [x] end logging
 
 
 -----
@@ -79,3 +80,17 @@ requirements amplitude for code flow
 
 # monitor logging x
 - [ ] consider notification steps
+
+# load plan
+loading from local to remote, S3 bucket, into snowflake
+ETlT
+- [ ] create s3 bucket
+- [ ] create s3 key
+- [ ] create aws roles
+- [ ] create aws policy
+- [ ] create aws user
+- [ ] create snowflake schema
+- [ ] create snowflake storage integration
+- [ ] create snowflake stage
+- [ ] create snowflake table for copy into
+- [ ] snowflake test copy into
