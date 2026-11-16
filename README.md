@@ -96,10 +96,10 @@ ETlT
 - [x] create snowflake schema
 - [x] create snowflake storage integration
 - [x] create snowflake stage
-- [ ] create snowflake table for copy into
-- [ ] snowflake test copy into
-- [ ] commit mvp
-- [ ] commit dynamic logic
+- [x] create snowflake table for copy into
+- [x] snowflake test copy into
+- [x] commit mvp
+- [x] commit dynamic logic
 - [ ] go back to extract
 
 # load sudo code
@@ -108,7 +108,7 @@ ETlT
 - [x] import dotenv
 - [x] import logging
 
-- [ ] start logging
+- [x] start logging
 - [x] read in keys
 - [x] where is json
 - [x] create a list
@@ -116,7 +116,7 @@ ETlT
 - [x] setup s3 client
 
 - [x] upload to s3
-- [ ] for loop
-- [ ] check the upload
-- [ ] delete locally
-- [ ] end logging
+- [x] for loop
+- [x] check the upload
+- [x] delete locally
+- [x] end logging

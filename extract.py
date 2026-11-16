@@ -13,7 +13,7 @@ timestamp = dt.now().strftime('%Y-%m-%d %H-%M-%S')
 
 #print(timestamp)
 
-log_dir = 'logs'
+log_dir = 'logs/extract'
 os.makedirs(log_dir,exist_ok=True)
 log_filename = f'{log_dir}/{timestamp}.log'
 

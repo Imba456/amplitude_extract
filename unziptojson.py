@@ -1,29 +1,32 @@
 # Unzip and decompress files to retrieve .json files
 # - Initial Unzip of 'amp_events.zip' is to a local 'data' folder
 # - JSON files are extracted to this same folder
-
-# Define Logging
-import logging
-from datetime import datetime
-
-# Set Log filepath location
-log_filename = f"logs/amplitude_load_unzip_folder_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-
-# Configure logs to retrieve INFO messages and higher
-logging.basicConfig(
-    level=logging.INFO, 
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    filename=log_filename
-)
-
-logger = logging.getLogger()
-
 # Load libraries
 import os
 import zipfile
 import gzip
 import shutil
 import tempfile
+import logging
+from datetime import datetime as dt
+
+# Define Logging
+
+timestamp = dt.now().strftime('%Y-%m-%d %H-%M-%S')
+log_dir = 'logs/unzip'
+os.makedirs(log_dir,exist_ok=True)
+log_filename = f'{log_dir}/{timestamp}.log'
+
+logging.basicConfig(
+    filename = log_filename
+    ,format = '%(asctime)s - %(levelname)s - %(message)s'
+    ,level = logging.INFO
+)
+
+logger = logging.getLogger()
+logger.info('logger initialised')
+
+
 
 # Create a temporary directory for extraction
 temp_dir = tempfile.mkdtemp()
@@ -77,6 +80,6 @@ try:
 except Exception as e:
     logger.error(f"Failed to delete temp directory: {str(e)}")
 
-print("All files extracted to the 'data' directory!")
+print(f"All files extracted to the {data_dir} directory!")
 
 logger.info('logger closed')
