@@ -40,6 +40,8 @@ requirements amplitude for code flow
 - [x] timestamp for filename
 - [x] create a data folder
 
+- [ ]Update Extract script so that it checks S3 for what files have already been uploaded and calls the API for any missing data
+
 - [x] while loop, 2 < max
     - [x] call API
     - [x] check the response
@@ -84,6 +86,8 @@ requirements amplitude for code flow
 # load plan
 loading from local to remote, S3 bucket, into snowflake
 ETlT
+- [ ] create new branch
+- [ ] first comment plan
 - [ ] create s3 bucket
 - [ ] create s3 key
 - [ ] create aws roles
@@ -94,3 +98,25 @@ ETlT
 - [ ] create snowflake stage
 - [ ] create snowflake table for copy into
 - [ ] snowflake test copy into
+- [ ] commit mvp
+- [ ] commit dynamic logic
+- [ ] go back to extract
+
+# load sudo code
+- [x] import aws related packages - boto3
+- [x] import os
+- [x] import dotenv
+- [x] import logging
+
+- [ ] start logging
+- [x] read in keys
+- [x] where is json
+- [x] create a list
+- [x] connect to aws
+- [x] setup s3 client
+
+- [x] upload to s3
+- [x] for loop
+- [x] check the upload
+- [x] delete locally
+- [ ] end logging
