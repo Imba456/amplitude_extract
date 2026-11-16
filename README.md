@@ -67,7 +67,7 @@ requirements amplitude for code flow
 - [x] extract files
 - [x] move files
 - [x] rename files
-- [ ] link both python scripts so file names flow through
+- [x] link both python scripts so file names flow through
 - [ ] unnest or fix JSON files if required
 
 - [x] end logging
@@ -86,37 +86,37 @@ requirements amplitude for code flow
 # load plan
 loading from local to remote, S3 bucket, into snowflake
 ETlT
-- [ ] create new branch
-- [ ] first comment plan
-- [ ] create s3 bucket
-- [ ] create s3 key
-- [ ] create aws roles
-- [ ] create aws policy
-- [ ] create aws user
-- [ ] create snowflake schema
-- [ ] create snowflake storage integration
-- [ ] create snowflake stage
-- [ ] create snowflake table for copy into
-- [ ] snowflake test copy into
-- [ ] commit mvp
-- [ ] commit dynamic logic
+- [x] create new branch
+- [x] first comment plan
+- [x] create s3 bucket
+- [x] create s3 kms key
+- [x] create aws roles
+- [x] create aws policy
+- [x] create aws user
+- [x] create snowflake schema
+- [x] create snowflake storage integration
+- [x] create snowflake stage
+- [x] create snowflake table for copy into
+- [x] snowflake test copy into
+- [x] commit mvp
+- [x] commit dynamic logic
 - [ ] go back to extract
 
 # load sudo code
-- [ ] import aws related packages - boto3
-- [ ] import os
-- [ ] import dotenv
-- [ ] import logging
+- [x] import aws related packages - boto3
+- [x] import os
+- [x] import dotenv
+- [x] import logging
 
-- [ ] start logging
-- [ ] read in keys
-- [ ] where is json
-- [ ] create a list
-- [ ] connect to aws
-- [ ] setup s3 client
+- [x] start logging
+- [x] read in keys
+- [x] where is json
+- [x] create a list
+- [x] connect to aws
+- [x] setup s3 client
 
-- [ ] upload to s3
-- [ ] for loop
-- [ ] check the upload
-- [ ] delete locally
-- [ ] end logging
+- [x] upload to s3
+- [x] for loop
+- [x] check the upload
+- [x] delete locally
+- [x] end logging
