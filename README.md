@@ -103,7 +103,7 @@ ETlT
 - [ ] go back to extract
 
 # load sudo code
-- [ ] import aws related packages - boto3
+- [x] import aws related packages - boto3
 - [ ] import os
 - [ ] import dotenv
 - [ ] import logging
