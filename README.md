@@ -103,20 +103,20 @@ ETlT
 - [ ] go back to extract
 
 # load sudo code
-- [x] import aws related packages - boto3
-- [x] import os
-- [x] import dotenv
-- [x] import logging
+- [ ] import aws related packages - boto3
+- [ ] import os
+- [ ] import dotenv
+- [ ] import logging
 
 - [ ] start logging
-- [x] read in keys
-- [x] where is json
-- [x] create a list
-- [x] connect to aws
-- [x] setup s3 client
+- [ ] read in keys
+- [ ] where is json
+- [ ] create a list
+- [ ] connect to aws
+- [ ] setup s3 client
 
-- [x] upload to s3
-- [x] for loop
-- [x] check the upload
-- [x] delete locally
+- [ ] upload to s3
+- [ ] for loop
+- [ ] check the upload
+- [ ] delete locally
 - [ ] end logging
