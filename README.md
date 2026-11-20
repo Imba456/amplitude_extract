@@ -143,148 +143,79 @@ planning json transform structure:
 
 design initial model schema for silver layer, upon creation, limit the tables and fields based on what our website supports
 
-# 1. `events` (Core Event & Timestamp Fact Table)
-Stores individual tracked actions, ingestion timestamps, and SDK routing metadata.
+### 1. `silver_events` (Core Event, Session & Device Table)
+Stores flattened top-level event, user, session, and device attributes sourced from `silver_stage`.
 
 | Column | Source Field | Data Type | Key / Notes |
 | :--- | :--- | :--- | :--- |
-| `uuid` | `uuid` | UUID | **PK** — Unique event identifier |
-| `insert_id` | `$insert_id` | String | Deduplication key |
-| `insert_key` | `$insert_key` | String | Optional deduplication partition key (`null` in sample) |
-| `schema_version` | `$schema` | Integer / String | Schema validation version (`null` in sample) |
-| `event_id` | `event_id` | Integer | Sequential event counter per user/device |
-| `event_type` | `event_type` | String | Name of the tracked event (e.g., `session_start`, `[Amplitude] Page Viewed`) |
-| `amplitude_event_type` | `amplitude_event_type` | String | Internal system event override (`null` in sample) |
-| `data_type` | `data_type` | String | Record classification (e.g., `event`) |
-| `amplitude_id` | `amplitude_id` | Long | **FK** → `users.amplitude_id` |
-| `session_id` | `session_id` | Long | **FK** → `sessions_devices.session_id` |
-| `app` | `app` | Integer | Amplitude project/app ID (e.g., `100011471`) |
-| `source_id` | `source_id` | String | Ingestion source identifier (`null` in sample) |
-| `partner_id` | `partner_id` | String | Integration partner identifier (`null` in sample) |
-| `is_attribution_event` | `is_attribution_event` | Boolean | Flag indicating an attribution-only event (`null` in sample) |
-| `event_time` | `event_time` | Timestamp (UTC) | Amplitude-adjusted event timestamp |
-| `client_event_time` | `client_event_time` | Timestamp (UTC) | Local device timestamp when event occurred |
-| `client_upload_time` | `client_upload_time` | Timestamp (UTC) | Local device timestamp when batch uploaded |
-| `server_received_time` | `server_received_time` | Timestamp (UTC) | Time Amplitude servers received the event |
-| `server_upload_time` | `server_upload_time` | Timestamp (UTC) | Partition key used by Export API `start`/`end` |
-| `processed_time` | `processed_time` | Timestamp (UTC) | Internal processing timestamp |
-| `sample_rate` | `sample_rate` | Nullable / Float | Sampling rate applied (`null` in sample) |
+| `filename` | `bronze.filename` | VARCHAR | Source file name from ingestion *(note: needs to be added to `silver_stage`)* |
+| `file_row_nr` | `bronze.file_row_nr` | INTEGER | Source row number within file *(note: needs to be added to `silver_stage`)* |
+| `uuid` | `json:uuid` | VARCHAR | **PK** — Unique event identifier |
+| `amplitude_id` | `json:amplitude_id` | BIGINT | Amplitude's canonical internal user ID |
+| `app` | `json:app` | INT | Amplitude project/app ID |
+| `city` | `json:city` | VARCHAR | Resolved city |
+| `client_event_time` | `json:client_event_time` | TIMESTAMP_NTZ | Local device timestamp when event occurred |
+| `client_upload_time` | `json:client_upload_time` | TIMESTAMP_NTZ | Local device timestamp when batch uploaded |
+| `country` | `json:country` | VARCHAR | Resolved country |
+| `data_type` | `json:data_type` | VARCHAR | Record classification (e.g., `event`) |
+| `device_brand` | `json:device_brand` | VARCHAR | Hardware brand |
+| `device_carrier` | `json:device_carrier` | VARCHAR | Mobile network carrier |
+| `device_family` | `json:device_family` | VARCHAR | Broad device/OS family (e.g., `iOS`, `Windows`, `Linux`) |
+| `device_id` | `json:device_id` | VARCHAR | Unique device/browser identifier |
+| `device_manufacturer` | `json:device_manufacturer` | VARCHAR | Hardware manufacturer |
+| `device_model` | `json:device_model` | VARCHAR | Hardware model code |
+| `device_type` | `json:device_type` | VARCHAR | Specific device/OS type (e.g., `Apple iPhone`) |
+| `dma` | `json:dma` | VARCHAR | Designated Market Area |
+| `event_id` | `json:event_id` | INT | Sequential event counter per user/device |
+| `event_time` | `json:event_time` | TIMESTAMP_NTZ | Amplitude-adjusted event timestamp (UTC) |
+| `event_type` | `json:event_type` | VARCHAR | Name of the tracked event |
+| `global_user_properties` | `json:global_user_properties` | VARIANT | Global user-level properties dictionary |
+| `group_properties` | `json:group_properties` | VARIANT | Custom group-level properties dictionary |
+| `idfa` | `json:idfa` | VARCHAR | Apple Identifier for Advertisers |
+| `ip_address` | `json:ip_address` | VARCHAR | Client IP address |
+| `is_attribution_event` | `json:is_attribution_event` | BOOLEAN | Flag indicating an attribution-only event |
+| `language` | `json:language` | VARCHAR | Device/browser locale language |
+| `library` | `json:library` | VARCHAR | Amplitude SDK name and version |
+| `location_lat` | `json:location_lat` | FLOAT | Latitude coordinate |
+| `location_lng` | `json:location_lng` | FLOAT | Longitude coordinate |
+| `os_name` | `json:os_name` | VARCHAR | Browser or OS name |
+| `os_version` | `json:os_version` | VARCHAR | Browser or OS version |
+| `partner_id` | `json:partner_id` | VARCHAR | Integration partner identifier |
+| `paying` | `json:paying` | BOOLEAN | Indicates whether the user has ever paid |
+| `platform` | `json:platform` | VARCHAR | Platform name (e.g., `Web`) |
+| `processed_time` | `json:processed_time` | TIMESTAMP_NTZ | Internal processing timestamp |
+| `region` | `json:region` | VARCHAR | Resolved state/province/region |
+| `sample_rate` | `json:sample_rate` | FLOAT | Sampling rate applied |
+| `server_received_time` | `json:server_received_time` | TIMESTAMP_NTZ | Time Amplitude servers received the event |
+| `server_upload_time` | `json:server_upload_time` | TIMESTAMP_NTZ | Time Amplitude servers uploaded the event |
+| `session_id` | `json:session_id` | BIGINT | Session start timestamp in epoch ms (`-1` if out-of-session) |
+| `source_id` | `json:source_id` | VARCHAR | Ingestion source identifier |
+| `start_version` | `json:start_version` | VARCHAR | App version on user's first recorded event |
+| `user_creation_time` | `json:user_creation_time` | TIMESTAMP_NTZ | Timestamp when the user profile was first created |
+| `user_id` | `json:user_id` | VARCHAR | Application external user ID (nullable) |
+| `user_properties` | `json:user_properties` | VARIANT | Raw user properties dictionary |
+| `version_name` | `json:version_name` | VARCHAR | Application release version |
 
 ---
 
-# 2. `users` (User Identity & Profile Table)
-Captures Amplitude's resolved user identity, advertising IDs, and account lifecycle timestamps.
+### 2. `silver_event_properties` (Unnested Event Properties)
+Key-value pairs flattened from `silver_event_properties_stage.event_properties`.
 
 | Column | Source Field | Data Type | Key / Notes |
 | :--- | :--- | :--- | :--- |
-| `amplitude_id` | `amplitude_id` | Long | **PK** — Amplitude's canonical internal user ID |
-| `user_id` | `user_id` | String | Application external user ID (e.g., email, nullable) |
-| `user_creation_time` | `user_creation_time` | Timestamp (UTC) | Timestamp when the user profile was first created (`null` in sample) |
-| `paying` | `paying` | Boolean | Indicates whether the user has ever paid (`null` in sample) |
-| `start_version` | `start_version` | String | App version on user's first recorded event (`null` in sample) |
-| `amplitude_attribution_ids` | `amplitude_attribution_ids` | String | Attribution campaign/source identifiers (`null` in sample) |
-| `adid` | `adid` | String | Google Advertising ID (`null` in sample) |
-| `idfa` | `idfa` | String | Apple Identifier for Advertisers (`null` in sample) |
+| `uuid` | `silver_event_properties_stage.uuid` | VARCHAR | **PK, FK** → `silver_events.uuid` |
+| `property_key` | `event_properties.<key>` | VARCHAR | **PK** — Event property name (e.g., `[Amplitude] Page URL`) |
+| `property_value` | `event_properties.<value>` | VARCHAR | String-cast property value |
 
 ---
 
-# 3. `sessions_devices` (Session, Device & Geolocation Context)
-Groups hardware, browser/OS, SDK, and geographic context captured during a session.
+### 3. `silver_user_properties` (Unnested User Properties)
+Key-value pairs flattened from `silver_user_properties_stage.user_properties`.
 
 | Column | Source Field | Data Type | Key / Notes |
 | :--- | :--- | :--- | :--- |
-| `session_id` | `session_id` | Long | **PK** — Session start timestamp in epoch ms (`-1` if out-of-session) |
-| `amplitude_id` | `amplitude_id` | Long | **FK** → `users.amplitude_id` |
-| `device_id` | `device_id` | String | Unique device/browser identifier |
-| `device_family` | `device_family` | String | Broad device/OS family (e.g., `iOS`, `Windows`, `Linux`, `Other`) |
-| `device_type` | `device_type` | String | Specific device/OS type (e.g., `Apple iPhone`, `Windows`) |
-| `device_brand` | `device_brand` | String | Hardware brand (`null` in sample) |
-| `device_manufacturer` | `device_manufacturer` | String | Hardware manufacturer (`null` in sample) |
-| `device_model` | `device_model` | String | Hardware model code (`null` in sample) |
-| `device_carrier` | `device_carrier` | String | Mobile network carrier (`null` in sample) |
-| `platform` | `platform` | String | Platform name (e.g., `Web`) |
-| `os_name` | `os_name` | String | Browser or OS name (e.g., `Mobile Safari`, `Chrome`) |
-| `os_version` | `os_version` | String | Browser or OS version (e.g., `27`, `156`) |
-| `version_name` | `version_name` | String | Application release version (`null` in sample) |
-| `library` | `library` | String | Amplitude SDK name and version (e.g., `amplitude-ts/2.16.1`) |
-| `language` | `language` | String | Device/browser locale language (e.g., `English`, `Japanese`) |
-| `ip_address` | `ip_address` | String | Client IP address |
-| `country` | `country` | String | Resolved country |
-| `region` | `region` | String | Resolved state/province/region |
-| `city` | `city` | String | Resolved city |
-| `dma` | `dma` | String | Designated Market Area (e.g., `Buffalo, NY`) |
-| `location_lat` | `location_lat` | Float | Latitude coordinate (`null` in sample) |
-| `location_lng` | `location_lng` | Float | Longitude coordinate (`null` in sample) |
-
----
-
-# 4. `event_properties` (Unnested Event Properties)
-Key-value pairs extracted from `event_properties` (e.g., `[Amplitude] Page URL`, `[Amplitude] Page Counter`, `referrer`).
-
-| Column | Source Field | Data Type | Key / Notes |
-| :--- | :--- | :--- | :--- |
-| `uuid` | `uuid` | UUID | **PK, FK** → `events.uuid` |
-| `property_key` | `event_properties.<key>` | String | **PK** — Event property name |
-| `property_value` | `event_properties.<value>` | String | String-cast property value |
-| `value_type` | *Derived* | String | Original JSON type (`string`, `number`, `boolean`, `array`) |
-
----
-
-# 5. `event_data` (Unnested Ingestion & System Metadata)
-Flattened key-value pairs from the `data` object (e.g., `path: "/2/httpapi"`, `user_properties_updated: true`, `group_first_event`, `group_ids`).
-
-| Column | Source Field | Data Type | Key / Notes |
-| :--- | :--- | :--- | :--- |
-| `uuid` | `uuid` | UUID | **PK, FK** → `events.uuid` |
-| `data_key` | `data.<key>` | String | **PK** — Metadata field name |
-| `data_value` | `data.<value>` | String | String-cast value (or JSON string for nested dicts like `group_ids`) |
-| `value_type` | *Derived* | String | Original JSON type (`string`, `boolean`, `object`) |
-
----
-
-# 6. `user_properties` (Unnested User & Attribution Properties)
-Key-value pairs extracted from `user_properties` (and `global_user_properties` if populated), such as `initial_utm_source` and `initial_referrer`.
-
-| Column | Source Field | Data Type | Key / Notes |
-| :--- | :--- | :--- | :--- |
-| `uuid` | `uuid` | UUID | **PK, FK** → `events.uuid` *(captures point-in-time user state on the event)* |
-| `amplitude_id` | `amplitude_id` | Long | **FK** → `users.amplitude_id` |
-| `scope` | *Derived* | String | **PK** — `project` (`user_properties`) or `global` (`global_user_properties`) |
-| `property_key` | `user_properties.<key>` | String | **PK** — User property name |
-| `property_value` | `user_properties.<value>` | String | String-cast property value (e.g., `EMPTY`) |
-| `value_type` | *Derived* | String | Original JSON type (`string`, `number`, `boolean`, `array`) |
-
----
-
-# 7. `event_groups` (Unnested Group Assignments)
-Account or organization assignments extracted from `groups` (empty `{}` in sample).
-
-| Column | Source Field | Data Type | Key / Notes |
-| :--- | :--- | :--- | :--- |
-| `uuid` | `uuid` | UUID | **PK, FK** → `events.uuid` |
-| `group_type` | `groups.<key>` | String | **PK** — Group category name |
-| `group_value` | `groups.<value>[i]` | String | **PK** — Specific group identifier (exploded if array) |
-
----
-
-# 8. `event_group_properties` (Unnested Group Properties)
-Custom attributes for associated groups extracted from `group_properties` (empty `{}` in sample).
-
-| Column | Source Field | Data Type | Key / Notes |
-| :--- | :--- | :--- | :--- |
-| `uuid` | `uuid` | UUID | **PK, FK** → `events.uuid` |
-| `group_type` | `group_properties.<group_type>` | String | **PK** — Group category name |
-| `property_key` | `group_properties.<group_type>.<key>` | String | **PK** — Group property name |
-| `property_value` | `group_properties.<group_type>.<value>` | String | String-cast group property value |
-| `value_type` | *Derived* | String | Original JSON type (`string`, `number`, `boolean`, `array`) |
-
----
-
-# 9. `event_plan` (Unnested Tracking Plan Metadata)
-Tracking plan validation details extracted from `plan` (e.g., `branch`, `source`, `version`; empty `{}` in sample).
-
-| Column | Source Field | Data Type | Key / Notes |
-| :--- | :--- | :--- | :--- |
-| `uuid` | `uuid` | UUID | **PK, FK** → `events.uuid` |
-| `plan_key` | `plan.<key>` | String | **PK** — Tracking plan attribute (`branch`, `source`, `version`, `versionId`) |
-| `plan_value` | `plan.<value>` | String | String-cast plan metadata value |
+| `session_id` | `silver_user_properties_stage.session_id` | BIGINT | Session identifier associated with the event |
+| `amplitude_id` | `silver_user_properties_stage.amplitude_id` | BIGINT | Amplitude canonical user ID *(note: aliased in stage view—see note below)* |
+| `user_id` | `silver_user_properties_stage.user_id` | VARCHAR | External user ID *(note: missing from stage view—see note below)* |
+| `property_key` | `user_properties.<key>` | VARCHAR | **PK** — User property name (e.g., `initial_utm_source`) |
+| `property_value` | `user_properties.<value>` | VARCHAR | String-cast user property value |
