@@ -24,7 +24,7 @@ requirements amplitude for code flow
 
 -----
 
-# sudo code plan
+# sudo code plan extract
 - [x] import os
 - [x] import datetime
 - [x] import requests #pip install requests
@@ -85,7 +85,7 @@ requirements amplitude for code flow
 
 # load plan
 loading from local to remote, S3 bucket, into snowflake
-ETlT
+EtLT
 - [x] create new branch
 - [x] first comment plan
 - [x] create s3 bucket
@@ -102,7 +102,7 @@ ETlT
 - [x] commit dynamic logic
 - [ ] go back to extract
 
-# load sudo code
+# sudo code load
 - [x] import aws related packages - boto3
 - [x] import os
 - [x] import dotenv
@@ -116,7 +116,7 @@ ETlT
 - [x] setup s3 client
 
 - [x] upload to s3
-- [x] for loop
-- [x] check the upload
-- [x] delete locally
-- [x] end logging
+    - [x] for loop
+    - [x] check the upload
+    - [x] delete locally
+- [x] end 
