@@ -2,6 +2,8 @@
 data/
 logs/
 datajson/
+temp/
+assets/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
